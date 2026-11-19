@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
   <!-- Immediate Theme Initializer to prevent flash of wrong theme (FOUC) -->
   <script>
     (function() {
@@ -211,6 +211,7 @@
                   <li>First-year undergraduate studying core electronics, circuits, analog systems, and algorithmic programming.</li>
                   <li>Exploring embedded systems, sensor integration, microcontrollers, and low-level software architecture.</li>
                   <li>Active self-directed learner participating in hands-on technical workshops, game dev projects, and algorithmic problem solving.</li>
+                  <li>Active member and Subcommittee (Subcom) team member for both IEEE and ISTE student chapters.</li>
                 </ul>
                 <div class="journey-tags">
                   <span>Circuits &amp; Signals</span>
@@ -613,8 +614,8 @@
                 <circle cx="80" cy="42" r="4" fill="#38bdf8"/>
               </svg>
             </div>
-            <h3>Gaming &amp; Movies</h3>
-            <p>Diving into immersive, story-driven games and cinema. Analyzing world-building, mechanics, and interactive storytelling inspires my creative projects.</p>
+            <h3>Gaming</h3>
+            <p class="beyond-line">Story-driven worlds.</p>
           </div>
 
           <!-- 2. Gym & Fitness -->
@@ -645,8 +646,8 @@
                 <circle cx="132" cy="74" r="2.5" fill="#f97316"/>
               </svg>
             </div>
-            <h3>Fitness &amp; Workouts</h3>
-            <p>Staying active, disciplined, and consistent in the gym. Heavy lifting and progressive overload build mental resilience, focus, and energy for technical problem solving.</p>
+            <h3>Fitness</h3>
+            <p class="beyond-line">Consistent gym sessions.</p>
           </div>
 
           <!-- 3. Photography -->
@@ -670,49 +671,11 @@
               </svg>
             </div>
             <h3>Photography</h3>
-            <p>Capturing everyday moments, street scenes, geometry, and perspectives through the lens. It trains the eye for detail, light, framing, and visual composition.</p>
-          </div>
-
-          <!-- 4. Technology & Hardware -->
-          <div class="rv card beyond-card" style="--d:0.18s" data-tilt>
-            <div class="beyond-illus-wrap">
-              <svg class="beyond-svg" viewBox="0 0 160 110" width="130" height="90" aria-hidden="true">
-                <defs>
-                  <linearGradient id="chipEqualGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#0284c7"/>
-                    <stop offset="100%" stop-color="#0369a1"/>
-                  </linearGradient>
-                </defs>
-                <path d="M 18 28 L 38 28 L 48 40" stroke="var(--acc)" stroke-width="1.8" fill="none" opacity="0.6"/>
-                <path d="M 18 82 L 38 82 L 50 70" stroke="var(--acc)" stroke-width="1.8" fill="none" opacity="0.6"/>
-                <path d="M 142 28 L 122 28 L 112 40" stroke="var(--acc)" stroke-width="1.8" fill="none" opacity="0.6"/>
-                <path d="M 142 82 L 122 82 L 110 70" stroke="var(--acc)" stroke-width="1.8" fill="none" opacity="0.6"/>
-                <circle cx="18" cy="28" r="2.5" fill="var(--acc)"/>
-                <circle cx="18" cy="82" r="2.5" fill="var(--acc)"/>
-                <circle cx="142" cy="28" r="2.5" fill="var(--acc)"/>
-                <circle cx="142" cy="82" r="2.5" fill="var(--acc)"/>
-                
-                <g transform="translate(80, 55)">
-                  <rect x="-26" y="-26" width="52" height="52" rx="10" fill="url(#chipEqualGrad)" stroke="#38bdf8" stroke-width="2"/>
-                  <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#0f172a"/>
-                  <circle cx="0" cy="0" r="5" fill="#38bdf8"/>
-                  
-                  <line x1="-32" y1="-14" x2="-26" y2="-14" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                  <line x1="-32" y1="0" x2="-26" y2="0" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                  <line x1="-32" y1="14" x2="-26" y2="14" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                  
-                  <line x1="26" y1="-14" x2="32" y2="-14" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                  <line x1="26" y1="0" x2="32" y2="0" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                  <line x1="26" y1="14" x2="32" y2="14" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
-                </g>
-              </svg>
-            </div>
-            <h3>Technology &amp; Tinkering</h3>
-            <p>Fascinated by how devices and electronics function under the hood. Experimenting with hardware modules, breadboard prototypes, and microcontroller circuits brings logic to life.</p>
+            <p class="beyond-line">Street &amp; everyday shots.</p>
           </div>
 
           <!-- 5. Music & Keyboard -->
-          <div class="rv card beyond-card" style="--d:0.24s" data-tilt>
+          <div class="rv card beyond-card" style="--d:0.18s" data-tilt>
             <div class="beyond-illus-wrap">
               <svg class="beyond-svg" viewBox="0 0 160 110" width="130" height="90" aria-hidden="true">
                 <defs>
@@ -741,12 +704,12 @@
                 <circle cx="118" cy="18" r="2.5" fill="#c084fc"/>
               </svg>
             </div>
-            <h3>Music &amp; Keyboard</h3>
-            <p>Playing the keyboard and unwinding with great playlists. Music provides creative rhythm, pattern recognition, and relaxation away from code and screens.</p>
+            <h3>Music</h3>
+            <p class="beyond-line">Keys and playlists.</p>
           </div>
 
           <!-- 6. Cooking & Food -->
-          <div class="rv card beyond-card" style="--d:0.30s" data-tilt>
+          <div class="rv card beyond-card" style="--d:0.24s" data-tilt>
             <div class="beyond-illus-wrap">
               <svg class="beyond-svg" viewBox="0 0 160 110" width="130" height="90" aria-hidden="true">
                 <defs>
@@ -764,12 +727,12 @@
                 <circle cx="80" cy="30" r="2" fill="#fbbf24"/>
               </svg>
             </div>
-            <h3>Cooking &amp; Food</h3>
-            <p>Experimenting in the kitchen with diverse cuisines, temperatures, and spices. Cooking is hands-on chemistry with delicious, shareable results.</p>
+            <h3>Cooking</h3>
+            <p class="beyond-line">Exploring new flavours.</p>
           </div>
 
           <!-- 7. Travelling -->
-          <div class="rv card beyond-card" style="--d:0.36s" data-tilt>
+          <div class="rv card beyond-card" style="--d:0.30s" data-tilt>
             <div class="beyond-illus-wrap">
               <svg class="beyond-svg" viewBox="0 0 160 110" width="130" height="90" aria-hidden="true">
                 <defs>
@@ -790,7 +753,7 @@
               </svg>
             </div>
             <h3>Travelling</h3>
-            <p>Discovering new destinations, scenic routes, cultures, and terrains. Getting on the road resets perspective and fuels fresh creative inspiration.</p>
+            <p class="beyond-line">Life on the road.</p>
           </div>
         </div>
       </div>
@@ -803,8 +766,6 @@
         <p class="rv" style="--d:.08s">Open to interesting engineering conversations, hardware and software collaborations, and internship opportunities. The fastest way to reach me is email.</p>
         
         <div class="cta rv" style="--d:.16s">
-          <a class="btn btn-primary" href="mailto:mail4aaronfrancis@gmail.com">mail4aaronfrancis@gmail.com</a>
-          
           <div class="social-links">
             <a class="ib" href="https://github.com/AaronFrancis7" target="_blank" rel="noopener" aria-label="GitHub profile: AaronFrancis7" title="GitHub: @AaronFrancis7">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -818,6 +779,13 @@
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
                 <rect width="4" height="12" x="2" y="9"/>
                 <circle cx="4" cy="4" r="2"/>
+              </svg>
+            </a>
+            
+            <a class="ib" href="mailto:mail4aaronfrancis@gmail.com" aria-label="Send email" title="Send email">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
               </svg>
             </a>
           </div>
