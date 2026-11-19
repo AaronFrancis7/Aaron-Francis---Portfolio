@@ -1,116 +1,277 @@
+/**
+ * Aaron Francis — Personal Portfolio Script
+ * Modern, accessible interactions, theme system, and smooth animations.
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
-  const $ = s => document.querySelector(s);
-  const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = selector => document.querySelector(selector);
+  const $$ = selector => document.querySelectorAll(selector);
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-  // Dynamic footer year
-  const yrEl = $("#yr-now");
-  if (yrEl) yrEl.textContent = new Date().getFullYear();
+  // ===== 1. THEME SWITCHER WITH LOCALSTORAGE PERSISTENCE =====
+  const themeToggleBtn = $("#theme-toggle");
+  const mobileThemeToggleBtn = $("#mobile-theme-toggle");
+  const htmlRoot = document.documentElement;
 
-  // Reveal on scroll
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("in");
-        io.unobserve(entry.target);
+  const getSystemTheme = () => {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+
+  const getActiveTheme = () => {
+    return htmlRoot.getAttribute("data-theme") || localStorage.getItem("af_theme") || getSystemTheme();
+  };
+
+  const applyTheme = (theme, save = true) => {
+    htmlRoot.setAttribute("data-theme", theme);
+    if (save) {
+      try {
+        localStorage.setItem("af_theme", theme);
+      } catch (e) {
+        console.warn("localStorage not available:", e);
       }
-    });
-  }, { threshold: 0.12 });
+    }
 
-  document.querySelectorAll(".rv").forEach(node => io.observe(node));
+    const isDark = theme === "dark";
+    const label = `Switch to ${isDark ? "light" : "dark"} mode`;
+    if (themeToggleBtn) {
+      themeToggleBtn.setAttribute("aria-label", label);
+      themeToggleBtn.setAttribute("title", label);
+    }
+    if (mobileThemeToggleBtn) {
+      const themeText = mobileThemeToggleBtn.querySelector(".theme-text");
+      if (themeText) {
+        themeText.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+    }
+  };
 
-  // Rotating hero words
-  const words = ["Coder.", "Maker.", "Builder."];
+  // Initialize theme button state
+  const currentTheme = getActiveTheme();
+  applyTheme(currentTheme, false);
+
+  const toggleTheme = () => {
+    const current = getActiveTheme();
+    const nextTheme = current === "dark" ? "light" : "dark";
+    applyTheme(nextTheme, true);
+  };
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", toggleTheme);
+  }
+  if (mobileThemeToggleBtn) {
+    mobileThemeToggleBtn.addEventListener("click", toggleTheme);
+  }
+
+  // Listen to OS theme changes if user hasn't explicitly set a preference
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+    if (!localStorage.getItem("af_theme")) {
+      applyTheme(e.matches ? "dark" : "light", false);
+    }
+  });
+
+  // ===== 2. DYNAMIC FOOTER YEAR =====
+  const yrEl = $("#yr-now");
+  if (yrEl) {
+    yrEl.textContent = new Date().getFullYear();
+  }
+
+  // ===== 3. SCROLL-REVEAL OBSERVER =====
+  const revealElements = $$(".rv");
+  if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -40px 0px"
+      }
+    );
+
+    revealElements.forEach(node => revealObserver.observe(node));
+  } else {
+    revealElements.forEach(node => node.classList.add("in"));
+  }
+
+  // ===== 4. ROTATING HERO ROLES =====
+  const words = ["Coder.", "Hardware Tinkerer.", "Game Dev Explorer.", "Problem Solver."];
   const rw = $("#rw");
   if (rw) {
     if (prefersReducedMotion) {
-      rw.textContent = words.join(" ");
+      rw.textContent = words[0];
     } else if (words.length > 1) {
-      let i = 0;
+      let wordIdx = 0;
       setInterval(() => {
         rw.classList.add("out");
         setTimeout(() => {
-          i = (i + 1) % words.length;
-          rw.textContent = words[i];
+          wordIdx = (wordIdx + 1) % words.length;
+          rw.textContent = words[wordIdx];
           rw.style.transition = "none";
           rw.classList.remove("out");
           rw.classList.add("pre");
-          rw.offsetWidth; // Force reflow
+          rw.offsetWidth; // Force DOM reflow
           rw.style.transition = "";
           rw.classList.remove("pre");
         }, 380);
-      }, 1900);
+      }, 2300);
     }
   }
 
-  // Navbar scroll effect, mobile menu toggle, and timeline progress
+  // ===== 5. NAVBAR SCROLL EFFECT & MOBILE DRAWER MENU =====
   const hd = $("#hd");
   const mb = $("#mb");
   const mn = $("#mn");
   const tl = $(".tl");
   const tf = $(".tf");
-  let ticking = false;
+  let scrollTicking = false;
 
-  const toggleMenu = open => {
+  const toggleMobileMenu = open => {
     if (!mn || !mb) return;
     mn.hidden = !open;
     mb.setAttribute("aria-expanded", String(open));
+    if (open) {
+      mn.style.display = "block";
+    } else {
+      mn.style.display = "none";
+    }
   };
 
   if (mb && mn) {
-    mb.onclick = () => toggleMenu(mn.hidden);
-    mn.onclick = e => {
-      if (e.target.closest("a")) toggleMenu(false);
-    };
+    mb.addEventListener("click", e => {
+      e.stopPropagation();
+      toggleMobileMenu(mn.hidden);
+    });
+
+    mn.addEventListener("click", e => {
+      if (e.target.closest("a")) {
+        toggleMobileMenu(false);
+      }
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !mn.hidden) {
+        toggleMobileMenu(false);
+      }
+    });
+
+    document.addEventListener("click", e => {
+      if (hd && !hd.contains(e.target) && !mn.hidden) {
+        toggleMobileMenu(false);
+      }
+    });
   }
 
-  addEventListener("keydown", e => {
-    if (e.key === "Escape") toggleMenu(false);
-  });
+  const onScroll = () => {
+    scrollTicking = false;
+    const currentY = window.scrollY;
 
-  document.addEventListener("click", e => {
-    if (hd && !hd.contains(e.target)) toggleMenu(false);
-  });
-
-  const updateScroll = () => {
-    ticking = false;
+    // Header glass transition
     if (hd) {
-      hd.classList.toggle("sc", scrollY > 16);
+      hd.classList.toggle("sc", currentY > 20);
     }
-    if (tl && tf) {
-      const r = tl.getBoundingClientRect();
-      const progress = Math.min(1, Math.max(0, (innerHeight * 0.7 - r.top) / r.height));
+
+    // Journey Timeline progress
+    if (tl && tf && !prefersReducedMotion) {
+      const rect = tl.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, (window.innerHeight * 0.7 - rect.top) / rect.height));
       tf.style.transform = `scaleY(${progress})`;
     }
   };
 
-  addEventListener("scroll", () => {
-    if (!ticking) {
-      ticking = requestAnimationFrame(updateScroll);
-    }
-  }, { passive: true });
-  updateScroll();
-
-  // Scroll-spy for active navigation highlighting
-  const sections = ["home", "journey", "skills", "projects", "beyond", "contact"];
-  const spy = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll(".dl a").forEach(a => {
-          a.classList.toggle("on", a.hash === "#" + entry.target.id);
-        });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(onScroll);
       }
+    },
+    { passive: true }
+  );
+  onScroll();
+
+  // ===== 6. ACTIVE NAVIGATION SCROLL-SPY =====
+  const sections = ["home", "journey", "skills", "projects", "beyond", "contact"];
+  if ("IntersectionObserver" in window) {
+    const navSpy = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const activeId = entry.target.id;
+            $$(".dl a").forEach(a => {
+              const href = a.getAttribute("href");
+              a.classList.toggle("on", href === `#${activeId}`);
+            });
+          }
+        });
+      },
+      { rootMargin: "-35% 0px -55% 0px" }
+    );
+
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) navSpy.observe(el);
     });
-  }, { rootMargin: "-45% 0px -50% 0px" });
+  }
 
-  sections.forEach(id => {
-    const el = $("#" + id);
-    if (el) spy.observe(el);
-  });
-
-  // Explicitly ensure project cards do not trigger navigation
-  document.querySelectorAll(".pj").forEach(card => {
+  // ===== 7. STRICTLY NON-CLICKABLE PROJECT CARDS =====
+  // User Requirement: Project cards must NOT become clickable links or trigger page navigation
+  $$(".pj").forEach(card => {
     card.addEventListener("click", e => {
+      // Do not navigate
       e.preventDefault();
     });
+    // Ensure keyboard accessibility without activating navigation
+    card.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+      }
+    });
   });
+
+  // ===== 8. INTERACTIVE 3D MOUSE TILT ON BEYOND-THE-CODE CARDS =====
+  if (!prefersReducedMotion && !isTouchDevice) {
+    const tiltCards = $$("[data-tilt]");
+
+    tiltCards.forEach(card => {
+      const svg = card.querySelector(".beyond-svg");
+      if (!svg) return;
+
+      let rafId = null;
+
+      const handleMouseMove = e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const deltaX = (x - centerX) / centerX;
+        const deltaY = (y - centerY) / centerY;
+
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          // Subtle, tactile 3D tilt
+          const rotX = -deltaY * 10;
+          const rotY = deltaX * 12;
+          svg.style.transform = `perspective(600px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-4px) scale(1.05)`;
+        });
+      };
+
+      const handleMouseLeave = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        svg.style.transform = "";
+      };
+
+      card.addEventListener("mousemove", handleMouseMove, { passive: true });
+      card.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    });
+  }
 });

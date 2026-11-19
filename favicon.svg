@@ -1,0 +1,23 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .mark { fill: #17191F; }
+    .accent { fill: #438BFF; }
+
+    @media (prefers-color-scheme: dark) {
+      .mark { fill: #FFFFFF; }
+    }
+  </style>
+
+  <!-- A -->
+  <path class="mark"
+        d="M5 53 L23 11 L41 53 H33 L23 29 L13 53 Z"/>
+
+  <!-- F -->
+  <path class="mark"
+        d="M35 11 H60 V18 H43 V29 H56 V36 H43 V53 H35 Z"/>
+
+  <!-- Blue accent -->
+  <path class="accent"
+        d="M19 42 H29 L25 49 H16 Z"/>
+</svg>
