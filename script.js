@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-  // ===== 1. THEME SWITCHER WITH LOCALSTORAGE PERSISTENCE =====
-  const themeToggleBtn = $("#theme-toggle");
+  // ===== 1. SINGLE "TIME OF DAY" TOGGLE WITH PERSISTENCE & 16-BIT TRANSITION =====
+  const timeHudBtn = $("#time-hud");
   const mobileThemeToggleBtn = $("#mobile-theme-toggle");
   const htmlRoot = document.documentElement;
 
@@ -22,6 +22,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return htmlRoot.getAttribute("data-theme") || localStorage.getItem("af_theme") || getSystemTheme();
   };
 
+  const updateHudLabel = (theme) => {
+    const isDark = theme === "dark";
+    const hudStatus = $("#time-hud-status");
+    if (hudStatus) {
+      hudStatus.textContent = isDark ? "[ Night ]" : "[ Day ]";
+    }
+    const mobileStatus = $("#mobile-hud-status");
+    if (mobileStatus) {
+      mobileStatus.textContent = isDark ? "Night" : "Day";
+    }
+    if (timeHudBtn) {
+      const label = `Time of Day: currently ${isDark ? "Night" : "Day"}. Click to transition.`;
+      timeHudBtn.setAttribute("aria-label", label);
+      timeHudBtn.setAttribute("title", label);
+    }
+  };
+
   const applyTheme = (theme, save = true) => {
     htmlRoot.setAttribute("data-theme", theme);
     if (save) {
@@ -31,33 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
         console.warn("localStorage not available:", e);
       }
     }
-
-    const isDark = theme === "dark";
-    const label = `Switch to ${isDark ? "light" : "dark"} mode`;
-    if (themeToggleBtn) {
-      themeToggleBtn.setAttribute("aria-label", label);
-      themeToggleBtn.setAttribute("title", label);
-    }
-    if (mobileThemeToggleBtn) {
-      const themeText = mobileThemeToggleBtn.querySelector(".theme-text");
-      if (themeText) {
-        themeText.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-      }
-    }
+    updateHudLabel(theme);
   };
 
-  // Initialize theme button state
+  // Initialize theme button state without triggering transition on page load
   const currentTheme = getActiveTheme();
   applyTheme(currentTheme, false);
 
   const toggleTheme = () => {
-    const current = getActiveTheme();
-    const nextTheme = current === "dark" ? "light" : "dark";
-    applyTheme(nextTheme, true);
+    let nextTheme;
+    if (window.pixelWorld) {
+      // Trigger signature 16-bit animated sunset or sunrise transition!
+      nextTheme = window.pixelWorld.toggleThemeTransition();
+    } else {
+      const current = getActiveTheme();
+      nextTheme = current === "dark" ? "light" : "dark";
+      applyTheme(nextTheme, true);
+    }
   };
 
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener("click", toggleTheme);
+  if (timeHudBtn) {
+    timeHudBtn.addEventListener("click", toggleTheme);
   }
   if (mobileThemeToggleBtn) {
     mobileThemeToggleBtn.addEventListener("click", toggleTheme);
